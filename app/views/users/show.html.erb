@@ -1,0 +1,50 @@
+<% if current_user %>
+     <%= render 'ribbitts/new_form' %>
+<% end %>
+
+<div id="ribbits" class="panel left">
+  <h1> Ribbit Profile</h1>
+  <div class="ribbitWrapper">
+    <img src="<%= @user.avatar_url %>" alt=""/>
+    <span class="name"><%= @user.name %>@</span> <%= @user.username %>
+    <p>
+      <%= @user.ribbitts.length %> Ribbits
+      <span class="spacing"> <%= @user.followers.length %> Followers </span>
+      <span class="spacing"> <%= @user.followeds.length %> Following </span>
+
+      <% if current_user && @user != current_user %>
+        <% if current_user.following? @user %>
+            <%= form_for @relationship, method: :delete do |f| %>
+              <%= f.submit "Unfollow" %>
+              <% end %>
+        <% else %>
+            <%= form_for @relationship do |f| %>
+              <%= f.hidden_field :followed_id, value: @user.id %>
+              <%= f.submit "Follow" %>
+            <% end %>
+        <% end %>
+      <% end %>
+    </p>
+    <% if @user.bio %>
+        <p><%= @user.bio %></p>
+    <% elseif @user.ribbits.first %>
+        <p> <%=@user.ribbits.first.content %></p>
+    <% end %>
+  </div>
+</div>
+<div class="panel left">
+  <h1> Ribbits </h1>
+  <% @user.ribbitts.each do |ribbit| %>
+      <div class="ribbitWrapper">
+        <a href="<%= user_path ribbit.user %>">
+          <img src="<%= ribbit.user.avatar_url %>" alt="span"/>
+          <span class="name"><%= ribbit.user.name %></span>
+        </a>
+        @<%= ribbit.user.username %>
+        <span class="time"><%= time_ago_in_words(ribbit.created_at)  %></span>
+        <p><%= ribbit.content %></p>
+      </div>
+  <% end %>
+</div>
+
+<%= javascript_include_tag 'ribbitts' %>

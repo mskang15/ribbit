@@ -1,0 +1,23 @@
+<% if current_user %>
+    <%= render 'ribbitts/new_form' %>
+<%  end %>
+
+<div class="panel left">
+  <h1>Public Profile</h1>
+  <% @users.each do |user| %>
+    <div class="ribbitWrapper">
+      <a href="<%= user_path user %>">
+          <img src="<%= user.avatar_url %>" alt=""/>
+          <span class="name"><%= user.name %>@</span> <%= user.username %>
+      </a>
+      @<%= user.username %>
+      <p>
+        <%= user.ribbitts.length %> Ribbits
+        <span class="spacing"> <%= user.followers.length %> Followers </span>
+        <span class="spacing"> <%= user.followeds.length %> Following </span>
+      </p>
+    </div>
+  <% end %>
+</div>
+
+<%= javascript_include_tag "ribbitts" %>
